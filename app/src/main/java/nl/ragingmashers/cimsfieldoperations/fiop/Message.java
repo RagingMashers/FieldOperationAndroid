@@ -8,6 +8,8 @@ import java.util.List;
 //@Generated("org.jsonschema2pojo")
 public class Message {
 
+
+
     @SerializedName("message")
     @Expose
     private String message;

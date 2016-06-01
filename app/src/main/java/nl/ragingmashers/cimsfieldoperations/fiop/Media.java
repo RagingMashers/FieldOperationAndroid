@@ -4,8 +4,17 @@ package nl.ragingmashers.cimsfieldoperations.fiop;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
+
 //@Generated("org.jsonschema2pojo")
 public class Media {
+
+    /*id": 8,
+"mimetype": "image/jpeg",
+"url": "http://localhost:8080/MediaDownload.ashx?id=8",
+"source": "sms",
+"importance": 1,
+"date": "2016-04-13T00:00:00"*/
 
     @SerializedName("id")
     @Expose
@@ -19,15 +28,12 @@ public class Media {
     @SerializedName("source")
     @Expose
     private String source;
-    @SerializedName("suggestion")
-    @Expose
-    private String suggestion;
     @SerializedName("importance")
     @Expose
     private Integer importance;
-    @SerializedName("category")
+    @SerializedName("date")
     @Expose
-    private String category;
+    private Date date;
 
     /**
      * No args constructor for use in serialization
@@ -37,23 +43,20 @@ public class Media {
     }
 
     /**
-     *
-     * @param id
-     * @param category
+     *  @param id
      * @param mimetype
-     * @param importance
-     * @param source
-     * @param suggestion
      * @param url
+     * @param source
+     * @param importance
+     * @param date
      */
-    public Media(Integer id, String mimetype, String url, String source, String suggestion, Integer importance, String category) {
+    public Media(Integer id, String mimetype, String url, String source, Integer importance, Date date) {
         this.id = id;
         this.mimetype = mimetype;
         this.url = url;
         this.source = source;
-        this.suggestion = suggestion;
         this.importance = importance;
-        this.category = category;
+        this.date = date;
     }
 
     /**
@@ -151,29 +154,6 @@ public class Media {
     /**
      *
      * @return
-     * The suggestion
-     */
-    public String getSuggestion() {
-        return suggestion;
-    }
-
-    /**
-     *
-     * @param suggestion
-     * The suggestion
-     */
-    public void setSuggestion(String suggestion) {
-        this.suggestion = suggestion;
-    }
-
-    public Media withSuggestion(String suggestion) {
-        this.suggestion = suggestion;
-        return this;
-    }
-
-    /**
-     *
-     * @return
      * The importance
      */
     public Integer getImportance() {
@@ -194,27 +174,11 @@ public class Media {
         return this;
     }
 
-    /**
-     *
-     * @return
-     * The category
-     */
-    public String getCategory() {
-        return category;
+    public Date getDate() {
+        return date;
     }
 
-    /**
-     *
-     * @param category
-     * The category
-     */
-    public void setCategory(String category) {
-        this.category = category;
+    public void setDate(Date date) {
+        this.date = date;
     }
-
-    public Media withCategory(String category) {
-        this.category = category;
-        return this;
-    }
-
 }

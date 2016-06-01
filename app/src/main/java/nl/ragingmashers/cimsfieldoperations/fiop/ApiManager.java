@@ -28,7 +28,7 @@ public class ApiManager {
 
     private static Gson gsonFactory(){
         GsonBuilder builder = new GsonBuilder();
-        return builder.serializeNulls().create();
+        return builder.serializeNulls().setDateFormat("yyyy-MM-dd'T'HH:mm:ss").create();
     }
 
     private static String baseUrl = "http://145.93.88.222:8080/api/%s/%s/%s";
