@@ -11,6 +11,9 @@ import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -30,7 +33,7 @@ public class ApiManager {
         GsonBuilder builder = new GsonBuilder();
         return builder.serializeNulls().setDateFormat("yyyy-MM-dd'T'HH:mm:ss").create();
     }
-
+    private static String uploadUrl = "http://145.93.88.222:8080/MediaUpload.ashx?id=%s";
     private static String baseUrl = "http://145.93.88.222:8080/api/%s/%s/%s";
 
     private static ApiManager instance;
@@ -249,6 +252,74 @@ public class ApiManager {
         } catch (IOException ex){
             Log.d("HTTP GET","error IO");
             return null;
+        }
+    }
+
+    public int uploadImage(String imagefilename, int incidentId){
+        Log.d("HTTP UPLOAD","Uploading " + imagefilename);
+
+        String boundary = "*************";
+        String[] split = imagefilename.split(File.pathSeparator);
+        String exsistingFileName = split[split.length-1];//get file name
+        String twoHyphens = "--";
+        String lineEnd = "\r\n";
+        try {
+            URL url = new URL(String.format(uploadUrl, incidentId+""));
+
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setRequestProperty("Content-Type", "multipart/form-data;boundary="+boundary);
+            urlConnection.setDoInput(true);
+            urlConnection.setDoOutput(true);
+            urlConnection.setUseCaches(false);
+
+            DataOutputStream dos = new DataOutputStream( urlConnection.getOutputStream() );
+
+            dos.writeBytes(twoHyphens + boundary + lineEnd);
+            dos.writeBytes("Content-Disposition: form-data; name=\"uploadedfile\";filename=\"" + exsistingFileName +"\"" + lineEnd);
+            dos.writeBytes(lineEnd);
+
+            FileInputStream fin = new FileInputStream(imagefilename);
+            byte[] buffer = new byte[1024];
+            int read;
+            while((read = fin.read(buffer))>0){
+                dos.write(buffer,0,read);
+            }
+            dos.writeBytes(lineEnd);
+            dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
+            fin.close();
+            dos.flush();
+
+            try {
+                Log.d("HTTP GET","Response code: " + urlConnection.getResponseCode());
+                BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                String line;
+                StringBuilder responseOutput = new StringBuilder();
+                while((line = in.readLine()) != null ) {
+                    responseOutput.append(line);
+                }
+                in.close();
+                String result = responseOutput.toString();
+                Log.d("HTTP GET","Response: " + result);
+                JSONObject obj;
+                try {
+                    obj = new JSONObject(result);
+                    if(!obj.getBoolean("succes")){
+                        Log.w("HTTP UPLOAD", "Error code: " + obj.getInt("errorCode"));
+                        Log.w("HTTP UPLOAD", "Error text: " + obj.getString("errorText"));
+                    }
+                    return obj.getInt("mediaId");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    return -1;
+                }
+            } finally {
+                urlConnection.disconnect();
+                Log.d("HTTP GET","disconnect");
+            }
+        } catch (IOException ex){
+            Log.d("HTTP GET","error IO");
+            return -1;
         }
     }
 
