@@ -102,7 +102,7 @@ public class NewMessageActivity extends AppCompatActivity {
 
         @Override
         protected void onCancelled(){
-            
+
         }
     }
 }
