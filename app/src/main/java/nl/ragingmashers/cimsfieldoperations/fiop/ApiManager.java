@@ -21,6 +21,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -161,10 +162,18 @@ public class ApiManager {
         }
     }
 
-    public boolean postMessage(String message, String title, int team) {
+    public boolean postMessge(String message, String title, int team){
+        return postMessage(message,title,team,-1);
+    }
+
+    public boolean postMessage(String message, String title, int team, final int mediaid) {
         String url = String.format(baseUrl+"?username=%s&token=%s","Messages","PostMessage","",username,token);
 
         Message message1 = new Message(message,title,team,"E");
+        if (mediaid > 0)
+            message1.setMedia(new ArrayList<Media>(){{
+                add(new Media(mediaid,null,null,null,null,null));//rest is ignored
+            }});
         String messageJ = gsonFactory().toJson(message1);
         String result = postRequest(url,messageJ.getBytes());
 
