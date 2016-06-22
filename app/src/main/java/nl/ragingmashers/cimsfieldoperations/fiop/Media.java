@@ -4,10 +4,11 @@ package nl.ragingmashers.cimsfieldoperations.fiop;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.Date;
 
 //@Generated("org.jsonschema2pojo")
-public class Media {
+public class Media implements Serializable{
 
     /*id": 8,
 "mimetype": "image/jpeg",

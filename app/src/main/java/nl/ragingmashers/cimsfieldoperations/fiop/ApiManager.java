@@ -34,8 +34,10 @@ public class ApiManager {
         GsonBuilder builder = new GsonBuilder();
         return builder.serializeNulls().setDateFormat("yyyy-MM-dd'T'HH:mm:ss").create();
     }
-    private static String uploadUrl = "http://145.93.88.222:8080/MediaUpload.ashx?id=%s";
-    private static String baseUrl = "http://145.93.88.222:8080/api/%s/%s/%s";
+    private static String ip = "http://145.93.88.121:8080/";
+
+    private static String uploadUrl = ip + "MediaUpload.ashx?id=%s";
+    private static String baseUrl = ip + "api/%s/%s/%s";
 
     private static ApiManager instance;
     public synchronized static ApiManager getInstance(){
@@ -174,6 +176,7 @@ public class ApiManager {
             message1.setMedia(new ArrayList<Media>(){{
                 add(new Media(mediaid,null,null,null,null,null));//rest is ignored
             }});
+        else message1.setMedia(new ArrayList<Media>());
         String messageJ = gsonFactory().toJson(message1);
         String result = postRequest(url,messageJ.getBytes());
 
@@ -328,6 +331,7 @@ public class ApiManager {
             }
         } catch (IOException ex){
             Log.d("HTTP GET","error IO");
+            Log.d("HTTP GET",ex.getMessage());
             return -1;
         }
     }
